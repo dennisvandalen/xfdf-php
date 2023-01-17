@@ -19,10 +19,11 @@ class XfdfParser
                 continue;
             }
             if ($line == '---') {
-                if (!empty($field->name)) {
+                if (! empty($field->name)) {
                     $this->fields[] = $field;
                 }
                 $field = new XfdfField();
+
                 continue;
             }
             $parts = explode(':', $line);
@@ -30,9 +31,9 @@ class XfdfParser
             $value = trim($parts[1]);
             switch ($key) {
                 case 'FieldType':
-                    if ($value == "Button") {
+                    if ($value == 'Button') {
                         $field->type = XfdfFieldType::BUTTON;
-                    } elseif ($value == "Text") {
+                    } elseif ($value == 'Text') {
                         $field->type = XfdfFieldType::TEXT;
                     } else {
                         $field->type = XfdfFieldType::UNKNOWN;
@@ -51,14 +52,14 @@ class XfdfParser
                     $field->justification = $value;
                     break;
                 case 'FieldStateOption':
-                    if (!$field->stateOptions) {
-                        $field->stateOptions = array();
+                    if (! $field->stateOptions) {
+                        $field->stateOptions = [];
                     }
                     $field->stateOptions[] = $value;
                     break;
             }
         }
-        if (!empty($field->name)) {
+        if (! empty($field->name)) {
             $this->fields[] = $field;
         }
 
@@ -77,6 +78,7 @@ class XfdfParser
                 return $field;
             }
         }
+
         return null;
     }
 
@@ -85,25 +87,25 @@ class XfdfParser
      */
     public function exportFields($onlyChanged = true): string
     {
-        $output = '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;
-        $output .= '<xfdf xmlns="http://ns.adobe.com/xfdf/" xml:space="preserve">' . PHP_EOL;
-        $output .= '<fields>' . PHP_EOL;
+        $output = '<?xml version="1.0" encoding="UTF-8"?>'.PHP_EOL;
+        $output .= '<xfdf xmlns="http://ns.adobe.com/xfdf/" xml:space="preserve">'.PHP_EOL;
+        $output .= '<fields>'.PHP_EOL;
         foreach ($this->fields as $field) {
             // only if changed
-            if ($onlyChanged && !$field->changed) {
+            if ($onlyChanged && ! $field->changed) {
                 continue;
             }
 
-            $output .= '<field name="' . $field->name . '">' . PHP_EOL;
+            $output .= '<field name="'.$field->name.'">'.PHP_EOL;
             if ($field->stateOptions) {
-                $output .= '<choice>' . $field->value . '</choice>' . PHP_EOL;
+                $output .= '<choice>'.$field->value.'</choice>'.PHP_EOL;
             } else {
-                $output .= '<value>' . htmlspecialchars($field->value) . '</value>' . PHP_EOL;
+                $output .= '<value>'.htmlspecialchars($field->value).'</value>'.PHP_EOL;
             }
-            $output .= '</field>' . PHP_EOL;
+            $output .= '</field>'.PHP_EOL;
         }
-        $output .= '</fields>' . PHP_EOL;
-        $output .= '</xfdf>' . PHP_EOL;
+        $output .= '</fields>'.PHP_EOL;
+        $output .= '</xfdf>'.PHP_EOL;
 
         return $output;
     }
