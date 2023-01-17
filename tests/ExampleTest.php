@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use DennisVanDalen\XfdfPhp\Exceptions\InvalidFieldOptionException;
 use DennisVanDalen\XfdfPhp\XfdfFieldType;
 use DennisVanDalen\XfdfPhp\XfdfParser;
@@ -10,7 +12,8 @@ it('can test', function () {
 
 it('can parse button and text fields', function () {
     $xfdf = new XfdfParser();
-    $xfdf->parseFields(<<<'PDFFIELD'
+    $xfdf->parseFields(
+        <<<'PDFFIELD'
 ---
 FieldType: Button
 FieldName: 1.1.a
@@ -48,7 +51,8 @@ PDFFIELD
 
 it('can generate xfdf', function () {
     $xfdf = new XfdfParser();
-    $xfdf->parseFields(<<<'PDFFIELD'
+    $xfdf->parseFields(
+        <<<'PDFFIELD'
 ---
 FieldType: Button
 FieldName: 1.1.a
@@ -69,7 +73,8 @@ PDFFIELD
     $xfdf->getFields()[0]->setValue('Ja. Ga verder met vraag 1b.');
     $xfdf->getFields()[1]->setValue('Any text');
 
-    expect($xfdf->exportFields())->toBe(<<<'XFDF'
+    expect($xfdf->exportFields())->toBe(
+        <<<'XFDF'
 <?xml version="1.0" encoding="UTF-8"?>
 <xfdf xmlns="http://ns.adobe.com/xfdf/" xml:space="preserve">
 <fields>
@@ -89,7 +94,8 @@ XFDF
 it('throws exception when setting invalid value', function () {
     $this->expectException(InvalidFieldOptionException::class);
     $xfdf = new XfdfParser();
-    $xfdf->parseFields(<<<'PDFFIELD'
+    $xfdf->parseFields(
+        <<<'PDFFIELD'
 ---
 FieldType: Button
 FieldName: 1.1.a
